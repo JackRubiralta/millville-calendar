@@ -8,6 +8,8 @@ const {
     deleteAllCalendars,
 } = require("./api");
 const readline = require("readline");
+const chalk = require("chalk");
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -19,18 +21,19 @@ const blockToColors = {};
 let humanitiesBlock = "";
 const secondLunchBlocks = [];
 const colorOptions = {
-    1: "Lavender",
-    2: "Sage",
-    3: "Grape",
-    4: "Flamingo",
-    5: "Banana",
-    6: "Tangerine",
-    7: "Peacock",
-    8: "Graphite",
-    9: "Blueberry",
-    10: "Basil",
-    11: "Tomato",
+    1: { name: "Lavender", hex: "#7986cb" },
+    2: { name: "Sage", hex: "#33b679" },
+    3: { name: "Grape", hex: "#8e24aa" },
+    4: { name: "Flamingo", hex: "#e67c73" },
+    5: { name: "Banana", hex: "#f6c026" },
+    6: { name: "Tangerine", hex: "#f5511d" },
+    7: { name: "Peacock", hex: "#039be5" },
+    8: { name: "Graphite", hex: "#616161" },
+    9: { name: "Blueberry", hex: "#3f51b5" },
+    10: { name: "Basil", hex: "#0b8043" },
+    11: { name: "Tomato", hex: "#d60000" },
 };
+
 let shareEmail = null;
 
 const askQuestion = (question) => {
@@ -41,21 +44,18 @@ const askQuestion = (question) => {
     });
 };
 
+const displayColors = () => {
+    const colorChoices = Object.entries(colorOptions).map(([id, { hex }]) => 
+        chalk.bgHex(hex)(` ${id} `)
+    ).join(""); // Joining with a space to place numbers side by side
+    console.log("Available Colors: " + colorChoices);
+};
 const setupCalendar = async () => {
     shareEmail = await askQuestion(
         "Please enter the email to share the calendar with: "
     );
-    const blocks = [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "Chapel",
-        "House Meetings",
-        "FLEX",
-    ];
+    const blocks = ["A", "B", "C", "D", "E", "F"];
+    const otherBlocks = ["Chapel", "FLEX", "House Meetings"]; // Add other categories as needed
 
     for (let block of blocks) {
         const className = await askQuestion(
@@ -63,13 +63,8 @@ const setupCalendar = async () => {
         );
         blockToClasses[block] = className;
 
-        let colorId = await askQuestion(
-            `Choose a color ID for ${block} from these options (${Object.entries(
-                colorOptions
-            )
-                .map(([id, name]) => `${id}: ${name}`)
-                .join(", ")}): `
-        );
+        displayColors();
+        let colorId = await askQuestion("Choose a color ID: ");
         while (!colorOptions[colorId]) {
             console.log("Invalid color ID selected.");
             colorId = await askQuestion("Please enter a valid color ID: ");
@@ -80,13 +75,18 @@ const setupCalendar = async () => {
     humanitiesBlock = await askQuestion(
         "Which block is the Humanities block?: "
     );
+
     const lunchBlocks = await askQuestion(
         "Enter the blocks that have class during the first lunch block: "
     );
+
+
     secondLunchBlocks.push(...lunchBlocks.split(","));
 
+
+    displayColors();
     let lunchColorId = await askQuestion(
-        "Choose a color ID for general Lunch from the above color options: "
+        "Choose a color ID: "
     );
     while (!colorOptions[lunchColorId]) {
         console.log("Invalid color ID selected for Lunch.");
@@ -95,16 +95,20 @@ const setupCalendar = async () => {
         );
     }
     blockToColors["Lunch"] = lunchColorId; // Assigning a color for general Lunch
-    let flexColorId = await askQuestion(
-        "Choose a color ID for FLEX from the above color options: "
-    );
-    while (!colorOptions[flexColorId]) {
-        console.log("Invalid color ID selected for FLEX.");
-        flexColorId = await askQuestion(
-            "Please enter a valid color ID for FLEX: "
+
+    for (const otherBlock of otherBlocks) {
+        displayColors();
+        let colorId = await askQuestion(
+            `Choose a color ID: `
         );
+        while (!colorOptions[colorId]) {
+            console.log(`Invalid color ID selected for ${otherBlock}.`);
+            colorId = await askQuestion(
+                `Please enter a valid color ID for ${otherBlock}: `
+            );
+        }
+        blockToColors[otherBlock] = colorId; // Assigning a color for each otherBlock
     }
-    blockToColors["FLEX"] = flexColorId; // Assigning a color for FLEX
 
     let defaultColorId = await askQuestion(
         "Choose a default color ID for events from the above color options: "
@@ -116,16 +120,6 @@ const setupCalendar = async () => {
         );
     }
     defaultColor = defaultColorId; // Assigning a color for default events
-    let houseMeetingsColorId = await askQuestion(
-        "Choose a color ID for House Meetings from the above color options: "
-    );
-    while (!colorOptions[houseMeetingsColorId]) {
-        console.log("Invalid color ID selected for House Meetings.");
-        houseMeetingsColorId = await askQuestion(
-            "Please enter a valid color ID for House Meetings: "
-        );
-    }
-    blockToColors["House Meetings"] = houseMeetingsColorId; // Assigning a color for House Meetings
 
     console.log("Configuration Complete!");
     rl.close();

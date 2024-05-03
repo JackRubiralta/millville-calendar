@@ -161,5 +161,4 @@ module.exports = {
     getCalendarEvents,
     getMillVilleCalendar,
     deleteAllCalendars // Add this to export the new function
-
 };
