@@ -31,6 +31,7 @@ const colorOptions = {
     10: "Basil",
     11: "Tomato",
 };
+let shareEmail = null;
 
 const askQuestion = (question) => {
     return new Promise((resolve) => {
@@ -41,7 +42,7 @@ const askQuestion = (question) => {
 };
 
 const setupCalendar = async () => {
-    const shareEmail = await askQuestion(
+    shareEmail = await askQuestion(
         "Please enter the email to share the calendar with: "
     );
     const blocks = [
