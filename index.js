@@ -98,7 +98,8 @@ const setupCalendar = async () => {
 
     for (const otherBlock of otherBlocks) {
         displayColors();
-        `Choose a color ID for ${otherBlock}: `
+        await askQuestion(
+        `Choose a color ID for ${otherBlock}: `)
 
         while (!colorOptions[colorId]) {
             console.log(`Invalid color ID selected for ${otherBlock}.`);
