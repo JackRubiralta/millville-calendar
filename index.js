@@ -98,7 +98,7 @@ const setupCalendar = async () => {
 
     for (const otherBlock of otherBlocks) {
         displayColors();
-        await askQuestion(
+        let colorId = await askQuestion(
         `Choose a color ID for ${otherBlock}: `)
 
         while (!colorOptions[colorId]) {
