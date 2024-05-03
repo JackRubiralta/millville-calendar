@@ -126,7 +126,7 @@ const setupCalendar = async () => {
 };
 
 const processEvents = async () => {
-    const events = await getMillVilleCalendar(15);
+    const events = await getMillVilleCalendar(34);
 
     // Sort events by start time to handle them in chronological order
     events.sort(
