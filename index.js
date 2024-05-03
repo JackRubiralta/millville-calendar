@@ -86,7 +86,7 @@ const setupCalendar = async () => {
 
     displayColors();
     let lunchColorId = await askQuestion(
-        "Choose a color ID: "
+        "Choose a color ID for Lunch: "
     );
     while (!colorOptions[lunchColorId]) {
         console.log("Invalid color ID selected for Lunch.");
@@ -98,9 +98,8 @@ const setupCalendar = async () => {
 
     for (const otherBlock of otherBlocks) {
         displayColors();
-        let colorId = await askQuestion(
-            `Choose a color ID: `
-        );
+        `Choose a color ID for ${otherBlock}: `
+
         while (!colorOptions[colorId]) {
             console.log(`Invalid color ID selected for ${otherBlock}.`);
             colorId = await askQuestion(
@@ -111,7 +110,7 @@ const setupCalendar = async () => {
     }
 
     let defaultColorId = await askQuestion(
-        "Choose a default color ID for events from the above color options: "
+        "Choose a default color ID for events: "
     );
     while (!colorOptions[defaultColorId]) {
         console.log("Invalid color ID selected for default color.");
@@ -185,6 +184,9 @@ const processEvents = async () => {
         } else if (event.summary == humFlex) {
             event.colorId = blockToColors[humFlex];
             event.summary = "Flex";
+        } else if (event.summary == "House Meetings,") {
+            event.summary = "House Meetings";
+            event.colorId = blockToColors[event.summary];
         } else {
             event.summary = event.summary;
             event.colorId = defaultColor;
