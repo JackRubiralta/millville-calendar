@@ -1,0 +1,12 @@
+# Dependency directories
+node_modules/
+
+# Environment configuration
+.env
+
+# Log files
+*.log
+
+# Other files and directories to ignore
+dist/
+tmp/
