@@ -182,11 +182,15 @@ const processEvents = async () => {
                     event.summary = blockToClasses[blockLetter];
                 }
             }
-        } else if (event.summary == humFlex) {
+        } else if (event.summary.includes(humFlex)) {
             event.colorId = blockToColors[humFlex];
             event.summary = "Flex";
-        } else if (event.summary == "House Meetings,") {
+        } else if (event.summary.includes("House Meetings")) {
             event.summary = "House Meetings";
+            event.colorId = blockToColors[event.summary];
+
+        } else if (event.summary.includes("Chapel")) {
+            event.summary = "Chapel";
             event.colorId = blockToColors[event.summary];
         } else {
             event.summary = event.summary;
